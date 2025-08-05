@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { Response } from 'express'
 import { IUserWithPassword, IResultFromJwtVerify } from 'src/type.app'
+import { GetUser } from 'src/utils/GlobeInfiniteQuery';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
 
     async login(dto: LoginDto) {
         const { password, ...user } = await this.validateUser(dto)
+
         const tokens = this.issueTokens(user.id)
 
         return {
@@ -60,7 +62,23 @@ export class AuthService {
     private async validateUser(dto: LoginDto) {
         const user = await this.userService.getByEmail(dto.email)
 
-        if (!user) throw new NotFoundException('User not found')
+		// Поиск юзера в базе данных globe infinite
+
+        // if (!user) {
+		// 	const globeUser = await GetUser(dto.email)
+
+		// 	if (globeUser) {
+		// 		user = await this.userService.create({
+					
+		// 		})
+		// 	} else {
+		// 		throw new NotFoundException('User not found')
+		// 	}
+		// }
+
+		if (!user) {
+			throw new NotFoundException('User not found')
+		}
 
         const isValid = await compare(dto.password, user.password)
 
@@ -98,7 +116,6 @@ export class AuthService {
 			domain: 'localhost',
 			expires: expiresIn,
 			secure: true,
-			// lax if production
 			sameSite: 'none'
 		})
 	}
@@ -109,7 +126,6 @@ export class AuthService {
 			domain: 'localhost',
 			expires: new Date(0),
 			secure: true,
-			// lax if production
 			sameSite: 'none'
 		})
 	}

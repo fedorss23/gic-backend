@@ -9,6 +9,10 @@ export class UserService {
 
     constructor(private prismaService: PrismaService) {}
 
+    async getAll() {
+        return this.prismaService.user.findMany()
+    }
+
     async getByEmail(email: string) {
         return this.prismaService.user.findUnique({
             where: {
