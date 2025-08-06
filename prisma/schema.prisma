@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("MAIN_DATABASE_URL")
 }
 
 
@@ -33,6 +33,10 @@ model User {
   languageProficiency String? @default("") @map("language_proficiency")
   rating Int? @default(0)
   blocked Boolean? @default(false)
+  country String? @default("")
+  city String? @default("")
+  avatar String? @default("")
+  age Int? @default(0)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
