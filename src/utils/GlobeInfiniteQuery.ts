@@ -1,4 +1,3 @@
-import { QueryResult } from "pg";
 import globeInfinite from "./GlobeInfinite.connecting";
 import { QUERY_TO_GET_USER } from "src/constants/DatabaseConfig";
 
