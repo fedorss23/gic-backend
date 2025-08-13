@@ -5,7 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { Response } from 'express'
 import { IUserWithPassword, IResultFromJwtVerify } from 'src/type.app'
-import { GetUser } from 'src/utils/GlobeInfiniteQuery';
+import { User } from '@prisma/client';
+
 
 @Injectable()
 export class AuthService {
@@ -59,7 +60,7 @@ export class AuthService {
 		return { accessToken, refreshToken }
     }
 
-    private async validateUser(dto: LoginDto) {
+    private async validateUser(dto: LoginDto): Promise<User> {
         const user = await this.userService.getByEmail(dto.email)
 
 		// Поиск юзера в базе данных globe infinite
