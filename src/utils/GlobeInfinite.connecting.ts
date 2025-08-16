@@ -1,34 +1,30 @@
-import { Pool, PoolClient, QueryResult } from 'pg';
 import { DATABASE_CONFIG } from 'src/constants/DatabaseConfig';
+import mysql, { FieldPacket, QueryResult } from "mysql2/promise"
 
 class GlobeInfinite {
-    private pool: Pool;
-
-    constructor(config: any) {
-        this.pool = new Pool(config);
-    }
-  
-    public async query(sql: string, params?: any[]): Promise<QueryResult | undefined> {
-        let client: PoolClient = await this.pool.connect()
+    public async query(sql: string): Promise<[QueryResult, FieldPacket[]] | null> {
+        const connection = await mysql.createConnection({
+            host: DATABASE_CONFIG.host, 
+            port: DATABASE_CONFIG.port, 
+            user: DATABASE_CONFIG.user, 
+            password: DATABASE_CONFIG.password,
+            database: DATABASE_CONFIG.database,
+            ssl: { rejectUnauthorized: false } 
+        });
 
         try {
-            const result = await client.query(sql, params);
-            return result;
+            const result = await connection.query(sql)
+            await connection.end()
+            return result
         } catch (error) {
-            console.log("Error with connecting to globe infinite database: ", error)
-        } finally {
-            if (client) {
-                client.release()
-            };
+            await connection.end()
+            console.log("Error with globe infinity")
+            return null
         }
-    }
-
-    public async close(): Promise<void> {
-        await this.pool.end();
     }
 }
 
-const globeInfinite = new GlobeInfinite(DATABASE_CONFIG)
+const globeInfinite = new GlobeInfinite()
 
 export default globeInfinite
 

@@ -17,6 +17,9 @@ export class UserService {
         return this.prismaService.user.findUnique({
             where: {
                 email
+            },
+            include: {
+                physiques: true
             }
         })
     }
@@ -25,6 +28,9 @@ export class UserService {
         return this.prismaService.user.findUnique({
             where: {
                 id: userId
+            },
+            include: {
+                physiques: true
             }
         })
     }

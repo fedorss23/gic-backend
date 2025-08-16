@@ -1,7 +1,8 @@
-import { Controller, HttpCode, UsePipes, ValidationPipe, Post, Body, Res, Req, UnauthorizedException, Query } from '@nestjs/common';
+import { Controller, HttpCode, UsePipes, ValidationPipe, Post, Body, Get, Res, Req, UnauthorizedException, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { Request, Response } from 'express';
+import { GetUser } from 'src/utils/GlobeInfiniteQuery';
 
 
 @Controller('auth')
