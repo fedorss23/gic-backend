@@ -1,15 +1,19 @@
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class PhysiquesDto {
+    @IsOptional()
     @IsString()
-    growth: string
+    growth?: string
+
+    @IsOptional()
+    @IsString()
+    weight?: string
+
+    @IsOptional()
+    @IsString()
+    hairColor?: string
 
     @IsString()
-    weight: string
-
-    @IsString()
-    hairColor: string
-
-    @IsString()
-    eyeColor: string
+    @IsOptional()
+    eyeColor?: string
 }

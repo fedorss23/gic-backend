@@ -4,7 +4,7 @@ import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcryptjs';
 import { Response } from 'express'
-import { IUserWithPassword, IResultFromJwtVerify } from 'src/type.app'
+import { IResultFromJwtVerify } from 'src/type.app'
 import { User } from '@prisma/client';
 
 
@@ -60,7 +60,7 @@ export class AuthService {
 		return { accessToken, refreshToken }
     }
 
-    private async validateUser(dto: LoginDto): Promise<User> {
+    private async validateUser(dto: LoginDto): Promise<any> {
         const user = await this.userService.getByEmail(dto.email)
 
 		// Поиск юзера в базе данных globe infinite
@@ -98,7 +98,7 @@ export class AuthService {
 		//eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { password, ...user } = (await this.userService.getById(
 			result.id
-		)) as IUserWithPassword
+		)) as any
 
 		const tokens = this.issueTokens(user.id)
 

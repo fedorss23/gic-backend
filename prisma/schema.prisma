@@ -51,10 +51,10 @@ model Physiques {
   id String @id @default(cuid())
   user User @relation(fields: [userId], references: [id])
   userId String @unique
-  growth String @default("")
-  weight String @default("")
-  hairColor String @default("") @map("hair_color")
-  eyeColor String @default("") @map("eye_color")
+  growth String @default("-")
+  weight String @default("-")
+  hairColor String @default("-") @map("hair_color")
+  eyeColor String @default("-") @map("eye_color")
 
   @@map("physiques")
 }

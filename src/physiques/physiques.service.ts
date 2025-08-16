@@ -2,6 +2,7 @@ import { Injectable, UsePipes, ValidationPipe, Post, HttpCode } from '@nestjs/co
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { PrismaService } from 'src/prisma.service';
 import { PhysiquesDto } from './dto/physiques.dto';
+import { Physiques } from '@prisma/client';
 
 @Injectable()
 export class PhysiquesService {
@@ -10,9 +11,16 @@ export class PhysiquesService {
 
     
     async create(userId: string, dto: PhysiquesDto) {
+        const dataset = {
+            growth: dto.growth,
+            hairColor: dto.hairColor,
+            weight: dto.weight,
+            eyeColor: dto.eyeColor
+        }
+
         return this.prisma.physiques.create({
             data: {
-                ...dto,
+                ...dataset,
                 user: {
                     connect: {
                         id: userId

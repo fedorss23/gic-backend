@@ -12,7 +12,7 @@ export class PhysiquesController {
   @Auth()
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  async create(@CurrentUser('id') userId: string, @Body() dto: PhysiquesDto) {
+  async create(@CurrentUser("id") userId: string, @Body() dto: PhysiquesDto) {
       return this.physiquesService.create(userId, dto)
   }
   

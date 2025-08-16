@@ -18,6 +18,9 @@ export class UserService {
             where: {
                 email
             },
+            include: {
+                physiques: true
+            }
         })
     }
 

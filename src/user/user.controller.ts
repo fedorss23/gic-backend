@@ -22,7 +22,7 @@ export class UserController {
     return this.userService.update(dto)
   }
 
-  @Get()
+  @Get("profile")
   @Auth()
   async getProfile(@CurrentUser("email") email: string) {
     return this.userService.getByEmail(email)
