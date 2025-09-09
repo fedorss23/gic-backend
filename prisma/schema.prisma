@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -42,6 +36,12 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   physiques Physiques?
+  educations Education[]
+  militaries Military[]
+  professions Profession[]
+  missions Mission[]
+  awards Award[]
+  document Document[]
 
   @@map("user")
 }
@@ -56,5 +56,112 @@ model Physiques {
   hairColor String @default("-") @map("hair_color")
   eyeColor String @default("-") @map("eye_color")
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@map("physiques")
+}
+
+model Education {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  name String
+  country String
+  type String
+  timeStart String @map("time_start")
+  timeFinal String @map("time_final")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("education")
+}
+
+model Military {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  name String
+  country String
+  achievements String
+  timeStart String @map("time_start")
+  timeFinal String @map("time_final")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("military")
+}
+
+model Profession {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  isMilitary Boolean @default(false)
+
+  name String
+  country String
+  tasks String
+  timeStrart String @map("time_start")
+  timeFinal String @map("time_final")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("profession")
+}
+
+model Mission {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  isMilitary Boolean @default(false)
+
+  name String
+  country String
+  role String
+  timeStart String @map("time_start")
+  timeFinal String @map("time_final")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("mission")
+}
+
+model Award {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  isMilitary Boolean @default(false)
+
+  name String
+  country String
+  achievements String
+  time String @map("time_start")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("award")
+}
+
+model Document {
+  id String @id @default(cuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  classification String
+  url String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("document")
 }

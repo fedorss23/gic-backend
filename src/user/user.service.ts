@@ -19,7 +19,12 @@ export class UserService {
                 email
             },
             include: {
-                physiques: true
+                physiques: true,
+                educations: true,
+                missions: true,
+                militaries: true,
+                awards: true,
+
             }
         })
     }
