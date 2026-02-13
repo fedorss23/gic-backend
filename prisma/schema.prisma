@@ -7,161 +7,241 @@ datasource db {
   url      = env("MAIN_DATABASE_URL")
 }
 
-
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  password String
-  firstName String @default("")
-  lastName String @default("")
-  isActivated Boolean? @default(false)
-  actibationLink String? @map("activation_link")
-  recoveryCode String? @map("recovery_code")
-  role String?
-  phone Int?
-  address String? @default("")
-  dateOfBirth String? @default("") @map("date_of_birth")
-  placeOfBirth String? @default("") @map("place_of_birth")
-  placOfResidence String? @default("") @map("place_of_residence")
-  citizenship String? @default("")
-  languageProficiency String? @default("") @map("language_proficiency")
-  rating Int? @default(0)
-  blocked Boolean? @default(false)
-  country String? @default("")
-  city String? @default("")
-  avatar String? @default("")
-  age Int? @default(0)
+  id                  String   @id @default(cuid())
+  email               String   @unique
+  password            String
+  firstName           String   @default("")
+  lastName            String   @default("")
+  isActivated         Boolean? @default(false)
+  actibationLink      String?  @map("activation_link")
+  recoveryCode        String?  @map("recovery_code")
+  role                String?
+  phone               Int?
+  address             String?  @default("")
+  dateOfBirth         String?  @default("") @map("date_of_birth")
+  placeOfBirth        String?  @default("") @map("place_of_birth")
+  placOfResidence     String?  @default("") @map("place_of_residence")
+  citizenship         String?  @default("")
+  languageProficiency String?  @default("") @map("language_proficiency")
+  rating              Int?     @default(0)
+  blocked             Boolean? @default(false)
+  country             String?  @default("")
+  city                String?  @default("")
+  avatar              String?  @default("")
+  age                 Int?     @default(0)
+
+  cars Car[]
+  securities Security[]
+  places Place[]
+  bookings Booking[]
+  events Event[]
+  transfers Transfer[]
+  flyings Flying[]
+  yachts Yacht[]
+  services Service[]
+
+  messages  Message[]
+  chats1    Chat[]   @relation("User1Chats")
+  chats2    Chat[]   @relation("User2Chats")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  physiques Physiques?
-  educations Education[]
-  militaries Military[]
-  professions Profession[]
-  missions Mission[]
-  awards Award[]
-  document Document[]
 
   @@map("user")
 }
 
-
-model Physiques {
+model Car {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
-  growth String @default("-")
-  weight String @default("-")
-  hairColor String @default("-") @map("hair_color")
-  eyeColor String @default("-") @map("eye_color")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  markName        String
+  lineCar         String
+  model           String
+  raiting         Int?     @default(0)
+  price           Int
+  imageUrls       String?  @default("") @map("image_urls")
+  isNew           Boolean? @default(false)
+  isRecomended    Boolean? @default(false)
+  representatives String?  @default("")
+  description     String?  @default("")
+  amenties        String?  @default("")
+  location        String?  @default("")
+  venichleClass   String
+  bodyType        String
+  year            Int
+  fuelType        String
+  maxPassangers   Int
+  baggage         Int
+  driver          String?  @default("")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("physiques")
 }
 
-model Education {
+model Security {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  name String
-  country String
-  type String
-  timeStart String @map("time_start")
-  timeFinal String @map("time_final")
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  name             String
+  price            Int
+  expirenceInYears Int
+  desc             String
+  imageUrls        String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("education")
 }
 
-model Military {
+model Place {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  name String
-  country String
-  achievements String
-  timeStart String @map("time_start")
-  timeFinal String @map("time_final")
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  name      String
+  type      String
+  price     Int
+  location  String
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("military")
 }
 
-model Profession {
+model Booking {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  isMilitary Boolean @default(false)
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  name String
-  country String
-  tasks String
-  timeStrart String @map("time_start")
-  timeFinal String @map("time_final")
+  name      String
+  type      String
+  price     Int
+  location  String
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("profession")
 }
 
-model Mission {
+model Event {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  isMilitary Boolean @default(false)
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  name String
-  country String
-  role String
-  timeStart String @map("time_start")
-  timeFinal String @map("time_final")
+  name      String
+  type      String
+  location  String
+  price     Int
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("mission")
 }
 
-model Award {
+model Transfer {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  isMilitary Boolean @default(false)
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  name String
-  country String
-  achievements String
-  time String @map("time_start")
+  name      String
+  type      String
+  way       String
+  price     Int
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("award")
 }
 
-model Document {
+model Flying {
   id String @id @default(cuid())
-  user User @relation(fields: [userId], references: [id])
-  userId String @unique
 
-  classification String
-  url String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  markName  String
+  model     String
+  line      String
+  price     Int
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+}
 
-  @@map("document")
+model Yacht {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  markName  String
+  model     String
+  line      String
+  price     Int
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Service {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  name      String
+  price     Int
+  type      String
+  desc      String
+  imageUrls String? @default("") @map("image_urls")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user1 User @relation("User1Chats", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("User2Chats", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  chatId    String
+  senderId  String
+  text      String
+  createdAt DateTime @default(now())
+
+  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, createdAt])
+  @@index([senderId])
 }

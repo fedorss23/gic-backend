@@ -7,7 +7,7 @@ import { hash } from 'bcryptjs';
 @Injectable()
 export class UserService {
 
-    constructor(private prismaService: PrismaService) {}
+    constructor(private prismaService: PrismaService) { }
 
     async getAll() {
         return this.prismaService.user.findMany()
@@ -18,14 +18,7 @@ export class UserService {
             where: {
                 email
             },
-            include: {
-                physiques: true,
-                educations: true,
-                missions: true,
-                militaries: true,
-                awards: true,
 
-            }
         })
     }
 
@@ -34,9 +27,7 @@ export class UserService {
             where: {
                 id: userId
             },
-            include: {
-                physiques: true
-            }
+
         })
     }
 
@@ -46,14 +37,14 @@ export class UserService {
             password: await hash(dto.password, 5),
         } as User
 
-        return this.prismaService.user.create({data: user})
+        return this.prismaService.user.create({ data: user })
     }
 
     async update(dto: User) {
         let data = dto
 
         if (dto.password) {
-            data = {...dto, password: await hash(dto.password, 5)}
+            data = { ...dto, password: await hash(dto.password, 5) }
         }
 
         return this.prismaService.user.update({

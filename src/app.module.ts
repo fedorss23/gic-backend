@@ -2,19 +2,33 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import { PhysiquesModule } from './physiques/physiques.module';
-import { MissionModule } from './mission/mission.module';
-import { MilitaryModule } from './military/military.module';
-import { EducationModule } from './education/education.module';
-import { AwardModule } from './award/award.module';
-import { DocumentModule } from './document/document.module';
-import { ProfessionModule } from './profession/profession.module';
+import { CarModule } from './car/car.module';
+import { SecurityModule } from './security/security.module';
+import { PlaceModule } from './place/place.module';
+import { BookingModule } from './booking/booking.module';
+import { EventModule } from './event/event.module';
+import { TransferModule } from './transfer/transfer.module';
+import { FlyingModule } from './flying/flying.module';
+import { YachtModule } from './yacht/yacht.module';
+import { ServiceModule } from './service/service.module';
+import { ChatModule } from './chat/chat.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule, 
-    UserModule, PhysiquesModule, MissionModule, MilitaryModule, EducationModule, AwardModule, DocumentModule, ProfessionModule
+    UserModule, 
+    CarModule, 
+    SecurityModule, 
+    PlaceModule, 
+    BookingModule, 
+    EventModule, 
+    TransferModule, 
+    FlyingModule, 
+    YachtModule, 
+    ServiceModule,
+    ChatModule
   ],
 })
 export class AppModule {}
