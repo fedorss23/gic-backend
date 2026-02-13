@@ -1,5 +1,4 @@
-import { IsEmail, IsString, MinLength } from "class-validator"
-
+import { IsEmail, IsString, MinLength } from 'class-validator'
 
 export class LoginDto {
     @IsEmail()
@@ -7,7 +6,7 @@ export class LoginDto {
 
     @IsString()
     @MinLength(8, {
-        message: "Password must be at least 8 characters long"
+        message: 'Password must be at least 8 characters long',
     })
     password: string
 }
@@ -24,7 +23,7 @@ export class RegisterDto {
 
     @IsString()
     @MinLength(8, {
-        message: "Password must be at least 8 characters long"
+        message: 'Password must be at least 8 characters long',
     })
     password: string
 

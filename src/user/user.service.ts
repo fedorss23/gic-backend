@@ -1,13 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { UserCreate } from './dto/user.dto';
-import { User } from '@prisma/client';
-import { hash } from 'bcryptjs';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
+import { UserCreate } from './dto/user.dto'
+import { User } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 @Injectable()
 export class UserService {
-
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService) {}
 
     async getAll() {
         return this.prismaService.user.findMany()
@@ -16,18 +15,16 @@ export class UserService {
     async getByEmail(email: string) {
         return this.prismaService.user.findUnique({
             where: {
-                email
+                email,
             },
-
         })
     }
 
     async getById(userId: string) {
         return this.prismaService.user.findUnique({
             where: {
-                id: userId
+                id: userId,
             },
-
         })
     }
 
@@ -49,9 +46,9 @@ export class UserService {
 
         return this.prismaService.user.update({
             where: {
-                email: dto.email
+                email: dto.email,
             },
-            data
+            data,
         })
     }
 }

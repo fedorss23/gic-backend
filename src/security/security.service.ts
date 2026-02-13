@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { CreateSecutiryDto, UpdateSecurityDto } from './dto/security.dto';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
+import { CreateSecutiryDto, UpdateSecurityDto } from './dto/security.dto'
 
 @Injectable()
 export class SecurityService {
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService) {}
 
     async getAll() {
         return this.prismaService.security.findMany()
@@ -13,8 +13,8 @@ export class SecurityService {
     async getById(id: string) {
         return this.prismaService.security.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -24,27 +24,27 @@ export class SecurityService {
                 ...dto,
                 user: {
                     connect: {
-                        id: userId
-                    }
-                }
-            }
+                        id: userId,
+                    },
+                },
+            },
         })
     }
 
     async update(id: string, dto: UpdateSecurityDto) {
         return this.prismaService.security.update({
             where: {
-                id
+                id,
             },
-            data: dto
+            data: dto,
         })
     }
 
     async delete(id: string) {
         return this.prismaService.security.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 }

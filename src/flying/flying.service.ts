@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { CreateFlyingDto, UpdateFlyingDto } from './dto/flying.dto';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
+import { CreateFlyingDto, UpdateFlyingDto } from './dto/flying.dto'
 
 @Injectable()
 export class FlyingService {
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService) {}
 
     async getAll() {
         return this.prismaService.flying.findMany()
@@ -13,8 +13,8 @@ export class FlyingService {
     async getById(id: string) {
         return this.prismaService.flying.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -24,27 +24,27 @@ export class FlyingService {
                 ...dto,
                 user: {
                     connect: {
-                        id: userId
-                    }
-                }
-            }
+                        id: userId,
+                    },
+                },
+            },
         })
     }
 
     async update(id: string, dto: UpdateFlyingDto) {
         return this.prismaService.flying.update({
             where: {
-                id
+                id,
             },
-            data: dto
+            data: dto,
         })
     }
 
     async delete(id: string) {
         return this.prismaService.flying.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 }

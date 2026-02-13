@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { CreateBookingDto, UpdateBookingDto } from './dto/booking.dto';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
+import { CreateBookingDto, UpdateBookingDto } from './dto/booking.dto'
 
 @Injectable()
 export class BookingService {
@@ -13,8 +13,8 @@ export class BookingService {
     async getById(id: string) {
         return this.prismaService.booking.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -24,27 +24,27 @@ export class BookingService {
                 ...dto,
                 user: {
                     connect: {
-                        id: userId
-                    }
-                }
-            }
+                        id: userId,
+                    },
+                },
+            },
         })
     }
 
     async update(id: string, dto: UpdateBookingDto) {
         return this.prismaService.booking.update({
             where: {
-                id
+                id,
             },
-            data: dto
+            data: dto,
         })
     }
 
     async delete(id: string) {
         return this.prismaService.booking.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 }
