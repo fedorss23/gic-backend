@@ -1,6 +1,6 @@
-import { IsUUID } from 'class-validator';
+import { IsUUID } from 'class-validator'
 
 export class CreateDialogDto {
-  @IsUUID()
-  targetUserId: string;
+    @IsUUID()
+    targetUserId: string
 }

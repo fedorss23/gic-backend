@@ -1,0 +1,8 @@
+node_modules
+dist
+*.lock
+.gitignore
+tsconfig*.json
+package.json
+nest-cli.json
+prisma/schema.prisma

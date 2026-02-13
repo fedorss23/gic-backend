@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { CreateYachtDto, UpdateYachtDto } from './dto/yacht.dto';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma.service'
+import { CreateYachtDto, UpdateYachtDto } from './dto/yacht.dto'
 
 @Injectable()
 export class YachtService {
-    constructor(private prismaService: PrismaService) { }
+    constructor(private prismaService: PrismaService) {}
 
     async getAll() {
         return this.prismaService.yacht.findMany()
@@ -13,8 +13,8 @@ export class YachtService {
     async getById(id: string) {
         return this.prismaService.yacht.findUnique({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 
@@ -24,27 +24,27 @@ export class YachtService {
                 ...dto,
                 user: {
                     connect: {
-                        id: userId
-                    }
-                }
-            }
+                        id: userId,
+                    },
+                },
+            },
         })
     }
 
     async update(id: string, dto: UpdateYachtDto) {
         return this.prismaService.yacht.update({
             where: {
-                id
+                id,
             },
-            data: dto
+            data: dto,
         })
     }
 
     async delete(id: string) {
         return this.prismaService.yacht.delete({
             where: {
-                id
-            }
+                id,
+            },
         })
     }
 }
