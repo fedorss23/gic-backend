@@ -10,32 +10,32 @@ export class TransferController {
 
     @Get()
     async getAll() {
-        return this.transferService.getAll()
+        return await this.transferService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.transferService.getById(id)
+        return await this.transferService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateTransferDto, @CurrentUser('id') userId: string) {
-        return this.transferService.create(dto, userId)
+        return await this.transferService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateTransferDto) {
-        return this.transferService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateTransferDto, @CurrentUser("id") userId: string) {
+        return await this.transferService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.transferService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.transferService.delete(id, userId)
     }
 }

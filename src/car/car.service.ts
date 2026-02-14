@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateCarDto, UpdateCarDto } from './dto/car.dto'
 
@@ -7,11 +7,11 @@ export class CarService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.car.findMany()
+        return await this.prismaService.car.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.car.findUnique({
+        return await this.prismaService.car.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class CarService {
     }
 
     async create(dto: CreateCarDto, userId: string) {
-        return this.prismaService.car.create({
+        return await this.prismaService.car.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class CarService {
         })
     }
 
-    async update(id: string, dto: UpdateCarDto) {
-        return this.prismaService.car.update({
+    async update(id: string, dto: UpdateCarDto, userId: string) {
+        const car = await this.prismaService.car.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!car) {
+            throw new NotFoundException('car was not found')
+        }
+
+        if (car.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this car')
+        }
+
+        return await this.prismaService.car.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class CarService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.car.delete({
+    async delete(id: string, userId: string) {
+        const car = await this.prismaService.car.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!car) {
+            throw new NotFoundException('car was not found')
+        }
+
+        if (car.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this car')
+        }
+
+        return await this.prismaService.car.delete({
             where: {
                 id,
             },

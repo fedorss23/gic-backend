@@ -10,32 +10,32 @@ export class FlyingController {
 
     @Get()
     async getAll() {
-        return this.flyingService.getAll()
+        return await this.flyingService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.flyingService.getById(id)
+        return await this.flyingService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateFlyingDto, @CurrentUser('id') userId: string) {
-        return this.flyingService.create(dto, userId)
+        return await this.flyingService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateFlyingDto) {
-        return this.flyingService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateFlyingDto, @CurrentUser("id") userId: string) {
+        return await this.flyingService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.flyingService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.flyingService.delete(id, userId)
     }
 }

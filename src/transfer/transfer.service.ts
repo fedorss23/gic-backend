@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateTransferDto, UpdateTransferDto } from './dto/transfer.dto'
 
@@ -7,11 +7,11 @@ export class TransferService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.transfer.findMany()
+        return await this.prismaService.transfer.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.transfer.findUnique({
+        return await this.prismaService.transfer.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class TransferService {
     }
 
     async create(dto: CreateTransferDto, userId: string) {
-        return this.prismaService.transfer.create({
+        return await this.prismaService.transfer.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class TransferService {
         })
     }
 
-    async update(id: string, dto: UpdateTransferDto) {
-        return this.prismaService.transfer.update({
+    async update(id: string, dto: UpdateTransferDto, userId: string) {
+        const transfer = await this.prismaService.transfer.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!transfer) {
+            throw new NotFoundException('transfer was not found')
+        }
+
+        if (transfer.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this transfer')
+        }
+
+        return await this.prismaService.transfer.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class TransferService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.transfer.delete({
+    async delete(id: string, userId: string) {
+        const transfer = await this.prismaService.transfer.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!transfer) {
+            throw new NotFoundException('transfer was not found')
+        }
+
+        if (transfer.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this transfer')
+        }
+
+        return await this.prismaService.transfer.delete({
             where: {
                 id,
             },

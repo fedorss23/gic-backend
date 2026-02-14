@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateFlyingDto, UpdateFlyingDto } from './dto/flying.dto'
 
@@ -31,7 +31,21 @@ export class FlyingService {
         })
     }
 
-    async update(id: string, dto: UpdateFlyingDto) {
+    async update(id: string, dto: UpdateFlyingDto, userId: string) {
+        const flying = await this.prismaService.flying.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!flying) {
+            throw new NotFoundException('flying was not found')
+        }
+
+        if (flying.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this flying')
+        }
+
         return this.prismaService.flying.update({
             where: {
                 id,
@@ -40,7 +54,21 @@ export class FlyingService {
         })
     }
 
-    async delete(id: string) {
+    async delete(id: string, userId: string) {
+        const flying = await this.prismaService.flying.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!flying) {
+            throw new NotFoundException('flying was not found')
+        }
+
+        if (flying.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this flying')
+        }
+
         return this.prismaService.flying.delete({
             where: {
                 id,

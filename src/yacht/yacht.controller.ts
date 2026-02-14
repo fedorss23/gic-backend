@@ -10,32 +10,32 @@ export class YachtController {
 
     @Get()
     async getAll() {
-        return this.yachtService.getAll()
+        return await this.yachtService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.yachtService.getById(id)
+        return await this.yachtService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateYachtDto, @CurrentUser('id') userId: string) {
-        return this.yachtService.create(dto, userId)
+        return await this.yachtService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateYachtDto) {
-        return this.yachtService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateYachtDto, @CurrentUser("id") userId: string) {
+        return await this.yachtService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.yachtService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.yachtService.delete(id, userId)
     }
 }

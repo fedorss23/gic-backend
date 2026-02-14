@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateYachtDto, UpdateYachtDto } from './dto/yacht.dto'
 
@@ -7,11 +7,11 @@ export class YachtService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.yacht.findMany()
+        return await this.prismaService.yacht.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.yacht.findUnique({
+        return await this.prismaService.yacht.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class YachtService {
     }
 
     async create(dto: CreateYachtDto, userId: string) {
-        return this.prismaService.yacht.create({
+        return await this.prismaService.yacht.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class YachtService {
         })
     }
 
-    async update(id: string, dto: UpdateYachtDto) {
-        return this.prismaService.yacht.update({
+    async update(id: string, dto: UpdateYachtDto, userId: string) {
+        const yacht = await this.prismaService.yacht.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!yacht) {
+            throw new NotFoundException("yacht was not found")
+        }
+
+        if (yacht.userId !== userId) {
+            throw new ForbiddenException("you are not allowed to update this yacht")
+        }
+
+        return await this.prismaService.yacht.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class YachtService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.yacht.delete({
+    async delete(id: string, userId: string) {
+        const yacht = await this.prismaService.yacht.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!yacht) {
+            throw new NotFoundException("yacht was not found")
+        }
+
+        if (yacht.userId !== userId) {
+            throw new ForbiddenException("you are not allowed to delete this yacht")
+        }
+
+        return await this.prismaService.yacht.delete({
             where: {
                 id,
             },

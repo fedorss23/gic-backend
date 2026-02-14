@@ -10,32 +10,32 @@ export class PlaceController {
 
     @Get()
     async getAll() {
-        return this.placeService.getAll()
+        return await this.placeService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.placeService.getById(id)
+        return await this.placeService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreatePlaceDto, @CurrentUser('id') userId: string) {
-        return this.placeService.create(dto, userId)
+        return await this.placeService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdatePlaceDto) {
-        return this.placeService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdatePlaceDto, @CurrentUser("id") userId: string) {
+        return await this.placeService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.placeService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.placeService.delete(id, userId)
     }
 }
