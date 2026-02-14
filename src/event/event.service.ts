@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto'
 
@@ -31,7 +31,21 @@ export class EventService {
         })
     }
 
-    async update(id: string, dto: UpdateEventDto) {
+    async update(id: string, dto: UpdateEventDto, userId: string) {
+        const event = await this.prismaService.event.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!event) {
+            throw new NotFoundException('event was not found')
+        }
+
+        if (event.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this event')
+        }
+
         return this.prismaService.event.update({
             where: {
                 id,
@@ -40,7 +54,21 @@ export class EventService {
         })
     }
 
-    async delete(id: string) {
+    async delete(id: string, userId: string) {
+        const event = await this.prismaService.event.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!event) {
+            throw new NotFoundException('event was not found')
+        }
+
+        if (event.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this event')
+        }
+
         return this.prismaService.event.delete({
             where: {
                 id,

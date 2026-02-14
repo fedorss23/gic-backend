@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateSecutiryDto, UpdateSecurityDto } from './dto/security.dto'
 
@@ -7,11 +7,11 @@ export class SecurityService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.security.findMany()
+        return await this.prismaService.security.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.security.findUnique({
+        return await this.prismaService.security.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class SecurityService {
     }
 
     async create(dto: CreateSecutiryDto, userId: string) {
-        return this.prismaService.security.create({
+        return await this.prismaService.security.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class SecurityService {
         })
     }
 
-    async update(id: string, dto: UpdateSecurityDto) {
-        return this.prismaService.security.update({
+    async update(id: string, dto: UpdateSecurityDto, userId: string) {
+        const security = await this.prismaService.security.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!security) {
+            throw new NotFoundException('security was not found')
+        }
+
+        if (security.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this security')
+        }
+
+        return await this.prismaService.security.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class SecurityService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.security.delete({
+    async delete(id: string, userId: string) {
+        const security = await this.prismaService.security.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!security) {
+            throw new NotFoundException('security was not found')
+        }
+
+        if (security.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this security')
+        }
+
+        return await this.prismaService.security.delete({
             where: {
                 id,
             },

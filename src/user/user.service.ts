@@ -9,11 +9,11 @@ export class UserService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.user.findMany()
+        return await this.prismaService.user.findMany()
     }
 
     async getByEmail(email: string) {
-        return this.prismaService.user.findUnique({
+        return await this.prismaService.user.findUnique({
             where: {
                 email,
             },
@@ -21,7 +21,7 @@ export class UserService {
     }
 
     async getById(userId: string) {
-        return this.prismaService.user.findUnique({
+        return await this.prismaService.user.findUnique({
             where: {
                 id: userId,
             },
@@ -34,7 +34,7 @@ export class UserService {
             password: await hash(dto.password, 5),
         } as User
 
-        return this.prismaService.user.create({ data: user })
+        return await this.prismaService.user.create({ data: user })
     }
 
     async update(dto: User) {
@@ -44,7 +44,7 @@ export class UserService {
             data = { ...dto, password: await hash(dto.password, 5) }
         }
 
-        return this.prismaService.user.update({
+        return await this.prismaService.user.update({
             where: {
                 email: dto.email,
             },

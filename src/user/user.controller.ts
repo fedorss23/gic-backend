@@ -11,7 +11,7 @@ export class UserController {
     @Get()
     @Auth()
     async allUsers() {
-        return this.userService.getAll()
+        return await this.userService.getAll()
     }
 
     @HttpCode(200)
@@ -19,12 +19,12 @@ export class UserController {
     @UsePipes(new ValidationPipe())
     @Post('update')
     async updateUser(@Body() dto: User) {
-        return this.userService.update(dto)
+        return await this.userService.update(dto)
     }
 
     @Get('profile')
     @Auth()
     async getProfile(@CurrentUser('email') email: string) {
-        return this.userService.getByEmail(email)
+        return await this.userService.getByEmail(email)
     }
 }

@@ -10,32 +10,32 @@ export class SecurityController {
 
     @Get()
     async getAll() {
-        return this.securityService.getAll()
+        return await this.securityService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.securityService.getById(id)
+        return await this.securityService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateSecutiryDto, @CurrentUser('id') userId: string) {
-        return this.securityService.create(dto, userId)
+        return await this.securityService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateSecurityDto) {
-        return this.securityService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateSecurityDto, @CurrentUser("id") userId: string) {
+        return await this.securityService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.securityService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.securityService.delete(id, userId)
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateServiceDto, UpdateServiceDto } from './dto/service.dto'
 
@@ -7,11 +7,11 @@ export class ServiceService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.service.findMany()
+        return await this.prismaService.service.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.service.findUnique({
+        return await this.prismaService.service.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class ServiceService {
     }
 
     async create(dto: CreateServiceDto, userId: string) {
-        return this.prismaService.service.create({
+        return await this.prismaService.service.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class ServiceService {
         })
     }
 
-    async update(id: string, dto: UpdateServiceDto) {
-        return this.prismaService.service.update({
+    async update(id: string, dto: UpdateServiceDto, userId: string) {
+        const service = await this.prismaService.service.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!service) {
+            throw new NotFoundException("service was not found")
+        }
+
+        if (service.userId !== userId) {
+            throw new ForbiddenException("you are not allowed to update this service")
+        }
+
+        return  await this.prismaService.service.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class ServiceService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.service.delete({
+    async delete(id: string, userId: string) {
+        const service = await this.prismaService.service.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!service) {
+            throw new NotFoundException("service was not found")
+        }
+
+        if (service.userId !== userId) {
+            throw new ForbiddenException("you are not allowed to delete this service")
+        }
+
+        return await this.prismaService.service.delete({
             where: {
                 id,
             },

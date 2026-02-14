@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { CreateBookingDto, UpdateBookingDto } from './dto/booking.dto'
 
@@ -7,11 +7,11 @@ export class BookingService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.booking.findMany()
+        return await this.prismaService.booking.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.booking.findUnique({
+        return await this.prismaService.booking.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class BookingService {
     }
 
     async create(dto: CreateBookingDto, userId: string) {
-        return this.prismaService.booking.create({
+        return await this.prismaService.booking.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class BookingService {
         })
     }
 
-    async update(id: string, dto: UpdateBookingDto) {
-        return this.prismaService.booking.update({
+    async update(id: string, dto: UpdateBookingDto, userId: string) {
+        const booking = await this.prismaService.booking.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!booking) {
+            throw new NotFoundException('booking was not found')
+        }
+
+        if (booking.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this booking')
+        }
+
+        return await this.prismaService.booking.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class BookingService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.booking.delete({
+    async delete(id: string, userId: string) {
+        const booking = await this.prismaService.booking.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!booking) {
+            throw new NotFoundException('booking was not found')
+        }
+
+        if (booking.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this booking')
+        }
+
+        return await this.prismaService.booking.delete({
             where: {
                 id,
             },

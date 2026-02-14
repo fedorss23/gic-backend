@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { CreatePlaceDto, UpdatePlaceDto } from './dto/place.dto'
 import { PrismaService } from 'src/prisma.service'
 
@@ -7,11 +7,11 @@ export class PlaceService {
     constructor(private prismaService: PrismaService) {}
 
     async getAll() {
-        return this.prismaService.place.findMany()
+        return await this.prismaService.place.findMany()
     }
 
     async getById(id: string) {
-        return this.prismaService.place.findUnique({
+        return await this.prismaService.place.findUnique({
             where: {
                 id,
             },
@@ -19,7 +19,7 @@ export class PlaceService {
     }
 
     async create(dto: CreatePlaceDto, userId: string) {
-        return this.prismaService.place.create({
+        return await this.prismaService.place.create({
             data: {
                 ...dto,
                 user: {
@@ -31,8 +31,22 @@ export class PlaceService {
         })
     }
 
-    async update(id: string, dto: UpdatePlaceDto) {
-        return this.prismaService.place.update({
+    async update(id: string, dto: UpdatePlaceDto, userId: string) {
+        const place = await this.prismaService.place.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!place) {
+            throw new NotFoundException('place was not found')
+        }
+
+        if (place.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to update this place')
+        }
+
+        return await this.prismaService.place.update({
             where: {
                 id,
             },
@@ -40,8 +54,22 @@ export class PlaceService {
         })
     }
 
-    async delete(id: string) {
-        return this.prismaService.place.delete({
+    async delete(id: string, userId: string) {
+        const place = await this.prismaService.place.findUnique({
+            where: {
+                id,
+            },
+        })
+
+        if (!place) {
+            throw new NotFoundException('place was not found')
+        }
+
+        if (place.userId !== userId) {
+            throw new ForbiddenException('you are not allowed to delete this place')
+        }
+
+        return await this.prismaService.place.delete({
             where: {
                 id,
             },

@@ -10,32 +10,32 @@ export class EventController {
 
     @Get()
     async getAll() {
-        return this.eventService.getAll()
+        return await this.eventService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.eventService.getById(id)
+        return await this.eventService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateEventDto, @CurrentUser('id') userId: string) {
-        return this.eventService.create(dto, userId)
+        return await this.eventService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateEventDto) {
-        return this.eventService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateEventDto, @CurrentUser("id") userId: string) {
+        return await this.eventService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.eventService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.eventService.delete(id, userId)
     }
 }

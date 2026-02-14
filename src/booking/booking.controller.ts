@@ -10,32 +10,32 @@ export class BookingController {
 
     @Get()
     async getAll() {
-        return this.bookingService.getAll()
+        return await this.bookingService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.bookingService.getById(id)
+        return await this.bookingService.getById(id)
     }
 
     @Post('create')
     @UsePipes(new ValidationPipe())
     @Auth()
     async create(@Body() dto: CreateBookingDto, @CurrentUser('id') userId: string) {
-        return this.bookingService.create(dto, userId)
+        return await this.bookingService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @UsePipes(new ValidationPipe())
     @Auth()
-    async update(@Param('id') id: string, @Body() dto: UpdateBookingDto) {
-        return this.bookingService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateBookingDto, @CurrentUser("id") userId: string) {
+        return await this.bookingService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.bookingService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.bookingService.delete(id, userId)
     }
 }

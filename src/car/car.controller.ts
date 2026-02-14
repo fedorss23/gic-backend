@@ -10,32 +10,32 @@ export class CarController {
 
     @Get()
     async getAll() {
-        return this.carService.getAll()
+        return await this.carService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.carService.getById(id)
+        return await this.carService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateCarDto, @CurrentUser('id') userId: string) {
-        return this.carService.create(dto, userId)
+        return await this.carService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateCarDto) {
-        return this.carService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateCarDto, @CurrentUser("id") userId: string) {
+        return await this.carService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.carService.delete(id)
+    async delete(@Param('id') id: string, @CurrentUser("id") userId: string) {
+        return await this.carService.delete(id, userId)
     }
 }

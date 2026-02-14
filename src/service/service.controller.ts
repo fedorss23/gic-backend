@@ -10,32 +10,32 @@ export class ServiceController {
 
     @Get()
     async getAll() {
-        return this.serviceService.getAll()
+        return await this.serviceService.getAll()
     }
 
-    @Get('getById:id')
+    @Get('getById/:id')
     async getById(@Param('id') id: string) {
-        return this.serviceService.getById(id)
+        return await this.serviceService.getById(id)
     }
 
     @Post('create')
     @Auth()
     @UsePipes(new ValidationPipe())
     async create(@Body() dto: CreateServiceDto, @CurrentUser('id') userId: string) {
-        return this.serviceService.create(dto, userId)
+        return await this.serviceService.create(dto, userId)
     }
 
-    @Put('update:id')
+    @Put('update/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async update(@Param('id') id: string, @Body() dto: UpdateServiceDto) {
-        return this.serviceService.update(id, dto)
+    async update(@Param('id') id: string, @Body() dto: UpdateServiceDto, @CurrentUser("id") userId: string) {
+        return await this.serviceService.update(id, dto, userId)
     }
 
-    @Delete('delete:id')
+    @Delete('delete/:id')
     @Auth()
     @UsePipes(new ValidationPipe())
-    async delete(@Param('id') id: string) {
-        return this.serviceService.delete(id)
+    async delete(@Param('id') id: string,  @CurrentUser("id") userId: string) {
+        return await this.serviceService.delete(id, userId)
     }
 }

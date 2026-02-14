@@ -5,6 +5,8 @@ import { SendMessageDto } from './dto/send-message.dto'
 import { GetMessagesDto } from './dto/get-messages.dto'
 import { GetChatsDto } from './dto/get-chats.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt.guard'
+import { User } from '@prisma/client'
+import { RequestWithUser } from 'src/types/req-with-user'
 
 @Controller('chats')
 @UseGuards(JwtAuthGuard)
@@ -12,7 +14,7 @@ export class ChatController {
     constructor(private readonly chatService: ChatService) {}
 
     @Post()
-    async createOrGetDialog(@Body() dto: CreateDialogDto, @Req() req: any) {
+    async createOrGetDialog(@Body() dto: CreateDialogDto, @Req() req: RequestWithUser) {
         const userId = req.user.id
 
         return this.chatService.createOrGetDialog({
@@ -22,7 +24,7 @@ export class ChatController {
     }
 
     @Get()
-    async getMyDialogs(@Req() req: any, @Query() query: GetChatsDto) {
+    async getMyDialogs(@Req() req: RequestWithUser, @Query() query: GetChatsDto) {
         const userId = req.user.id
 
         return this.chatService.getUserDialogs({
@@ -32,7 +34,11 @@ export class ChatController {
     }
 
     @Get(':chatId/messages')
-    async getMessages(@Param('chatId', ParseUUIDPipe) chatId: string, @Query() query: GetMessagesDto, @Req() req: any) {
+    async getMessages(
+        @Param('chatId', ParseUUIDPipe) chatId: string,
+        @Query() query: GetMessagesDto,
+        @Req() req: RequestWithUser,
+    ) {
         const userId = req.user.id
 
         return this.chatService.getMessages({
@@ -44,12 +50,16 @@ export class ChatController {
     }
 
     @Post(':chatId/messages')
-    async sendMessage(@Param('chatId', ParseUUIDPipe) chatId: string, @Body() dto: SendMessageDto, @Req() req: any) {
-        const senderId = req.user.id
+    async sendMessage(
+        @Param('chatId', ParseUUIDPipe) chatId: string,
+        @Body() dto: SendMessageDto,
+        @Req() req: RequestWithUser,
+    ) {
+        const userId = req.user.id
 
         return this.chatService.sendMessage({
             chatId,
-            senderId,
+            senderId: userId,
             text: dto.text,
         })
     }
